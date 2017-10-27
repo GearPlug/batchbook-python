@@ -1,7 +1,6 @@
 from setuptools import setup
 
-
-setup(name='bathcbook,
+setup(name='batchcbook,
       version='0.1',
       description='Batchbook API written in python',
       author='Lelia Rubiano',
