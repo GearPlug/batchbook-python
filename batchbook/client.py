@@ -21,24 +21,24 @@ class Client(object):
         else:
             return url
 
-    def _get(self, endpoint, params=None):
-        return self._request('GET', endpoint, params=params)
+    def _get(self, endpoint, params=None, identifier=None):
+        return self._request('GET', endpoint, params=params, identifier=identifier)
 
     def _delete(self, endpoint, params=None, identifier=None):
         return self._request('DELETE', endpoint, params=params, identifier=identifier)
 
-    def _post(self, endpoint, params=None, data=None):
-        return self._request('POST', endpoint, data=data)
+    def _post(self, endpoint, params=None, json=None):
+        return self._request('POST', endpoint, json=json)
 
-    def _request(self, method, endpoint, params=None, data=None, **kwargs):
+
+    def _request(self, method, endpoint, params=None, json=None, **kwargs):
         parameters = {'auth_token' : self._api_key}
         if params is not None:
             for k,v in params.items():
                 parameters[k] = v
         url = '{0}/{1}{2}'.format(self._base_url, endpoint, '.json')
-        response = requests.request(method, url, params=parameters, data=data)
+        response = requests.request(method, url, params=parameters, json=json)
         r = response.__dict__
-        print(response.status_code)
         if response.status_code in [403, 404, 500]:
             if response.status_code == 404:
                 if 'identifier' in kwargs:
@@ -63,12 +63,12 @@ class Client(object):
         else:
             if since or until:
                 if since:
-                    data ={'updated_since' : since}
+                    params ={'updated_since' : since}
                 if until:
-                    data ={'updated_before' : until}
-                return self._get(endpoint='people', data=data).json()
+                    params ={'updated_before' : until}
+                return self._get(endpoint='people', params=params).json()
             else:
-                return self._get(endpoint='people').json()
+                return self._get(endpoint='people').json()['people']
 
     def get_contact(self, contact_id):
         """
@@ -76,7 +76,7 @@ class Client(object):
         Returns:
             A json.
         """
-        return self._get(endpoint='people/{0}'.format(contact_id), identifier='contact').json()
+        return self._get(endpoint='people/{0}'.format(contact_id), identifier='contact').json()['person']
 
     def delete_contact(self, contact_id):
         """
@@ -86,11 +86,24 @@ class Client(object):
         """
         return self._delete(endpoint='people/{0}'.format(contact_id), identifier='contact').status_code
 
-    def create_contact(self):
+    def create_contact(self, data):
         """
-        Args: contact_id: String, Unique ID for the contact
+        Create a new contact
+        Args: data: A dictionary with the parameters
+        data = {
+            "person":
+            {
+            "prefix": String,
+            "first_name": String,
+            "middle_name": String,
+            "last_name": String,
+            }
+        }
         Returns:
             A status_code.
         """
-        data = {'first_name': 'Rodrigo'}
-        return self._post(endpoint='people/', data=data)
+        if 'first_name' not in data['person']:
+            raise exception.InvalidFirstName("Contact must have a name")
+        if 'first_name' not in data['person']:
+            raise exception.InvalidFirstName("Contact must have a last name")
+        return self._post(endpoint='people', json=data).json()['person']

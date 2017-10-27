@@ -9,3 +9,9 @@ class Bad_Request(BaseError):
 
 class Not_Found(BaseError):
     pass
+
+class InvalidFirstName(BaseError):
+    pass
+
+class InvalidLastName(BaseError):
+    pass
