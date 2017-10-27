@@ -9,7 +9,6 @@ setup(name='batchbook',
       packages=['batchbook'],
       install_requires=[
           'requests',
-          'urllib',
       ],
       keywords='batchbook',
       zip_safe=False,
