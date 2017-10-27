@@ -9,12 +9,11 @@ pip install git+github.com/GearPlug/batchbook-python.git
 ## Usage
 ### Simple access with API KEY
 ```
-from typeform.client import Client
+from batchbool.client import Client
 
 client = Client('API_KEY')
 ```
 
-```
 Get Contacts
 ```
 client.get_contacts()
