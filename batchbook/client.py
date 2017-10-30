@@ -66,7 +66,7 @@ class Client(object):
                     params ={'updated_since' : since}
                 if until:
                     params ={'updated_before' : until}
-                return self._get(endpoint='people', params=params).json()
+                return self._get(endpoint='people', params=params).json()['people']
             else:
                 return self._get(endpoint='people').json()['people']
 
