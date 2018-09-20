@@ -3,7 +3,7 @@ Batchbook API wrapper written in python.
 
 ## Installing
 ```
-pip install git+github.com/GearPlug/batchbook-python.git
+pip install batchbook-python
 ```
 
 ## Usage
